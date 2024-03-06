@@ -7,6 +7,8 @@ from detection_module import print_env
 load_dotenv()
 app = Flask(__name__)
 
+# 도커 명령: docker compose up -d
+
 @app.route('/')
 def hello():
 	abc = print_env()
