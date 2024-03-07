@@ -18,6 +18,8 @@ services:
     # flask requires SIGINT to stop gracefully
     # (default stop signal from Compose is SIGTERM)
     stop_signal: SIGINT
+    env_file:
+      - ./deploy/.ENV
     environment:
       - FLASK_SERVER_PORT=9091
     volumes:
