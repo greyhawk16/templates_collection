@@ -5,6 +5,7 @@ from flask import Flask, render_template
 from detection_module import *
 # from pymongo import MongoClient
 
+
 app = Flask(__name__)
 
 # client = MongoClient("mongo:27017")
