@@ -8,10 +8,10 @@ ENV.txt
 *.tfstate
 *.tfstate.backup
 *.lock.info
-/terraform/.terraform
-/terraform/terraform.tfstate
-/terraform/terraform.tfstate.backup
-/terraform/.terraform.lock.hcl
+*/terraform/.terraform
+*/terraform/terraform.tfstate
+*/terraform/terraform.tfstate.backup
+*/terraform/.terraform.lock.hcl
 location.txt
 test.py
 참고링크.txt
