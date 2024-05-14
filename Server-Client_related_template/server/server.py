@@ -1,5 +1,25 @@
 import socket
 
+
+SIZE = 1024
+FORMAT = "utf-8"
+
+
+def get_filename(host, port):
+    BUFFER_SIZE = 4096  # Buffer size for receiving
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((host, port))
+        s.listen()
+        print(f'Waiting for connection at {host}:{port}')
+        conn, addr = s.accept()
+
+        with conn:
+            filename = conn.recv(SIZE).decode(FORMAT)
+            print(f"received filename: {filename}")
+            return filename
+
+
 def receive_file(file_name, host, port):
     BUFFER_SIZE = 4096  # Buffer size for receiving
 

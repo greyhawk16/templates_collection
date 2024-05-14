@@ -4,6 +4,20 @@
 
 import socket
 
+
+FORMAT = "utf-8"
+SIZE = 1024
+
+
+def send_filename(filename, host, port):
+    BUFFER_SIZE = 4096  # Buffer size for sending
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port))
+        s.send(filename.encode(FORMAT))
+        print(f"file sent: {filename}")
+         
+
 def send_file(filename, host, port):
     BUFFER_SIZE = 4096  # Buffer size for sending
 
