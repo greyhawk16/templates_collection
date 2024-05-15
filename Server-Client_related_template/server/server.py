@@ -8,12 +8,13 @@ from os.path import exists
 import sys
 
 
+HOST = '127.0.0.1'
 PORT = 8888
 BUFFER_SIZE = 1024
 STORAGE_FOLDER = './uploads/'
 
 serverSock = socket(AF_INET, SOCK_STREAM)
-serverSock.bind(('', PORT))
+serverSock.bind((HOST, PORT))
 serverSock.listen(1)
 
 connectionSock, addr = serverSock.accept()
@@ -24,10 +25,9 @@ file_name = file_name.decode('utf-8')
 print('받을 파일 이름 : ', file_name) #파일 이름을 일반 문자열로 변환한다
 
 with open(STORAGE_FOLDER + file_name, 'wb') as f:
-    while True:
-        data = connectionSock.recv(BUFFER_SIZE)
-        if not data:
-            break
+    data = connectionSock.recv(BUFFER_SIZE)
+    while data:
         f.write(data)
+        data = connectionSock.recv(BUFFER_SIZE)
 
-    print('Received')
+    print(f'Received {file_name}')
