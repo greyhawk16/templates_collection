@@ -26,6 +26,7 @@ with open(filename, 'rb') as f:
         # 1안
         while True:
             data = f.read(BUFFER_SIZE)
+            data_transferred += len(data)
             if not data:
                 break
             clientSock.sendall(data)
