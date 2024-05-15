@@ -1,2 +1,0 @@
-xfoil.exe:  c17342f84ae260c2b11a74cd0e2fb8189a5f8954c6bb7a8467a0f27055c7faea
-server/received_file-1.exe: c17342f84ae260c2b11a74cd0e2fb8189a5f8954c6bb7a8467a0f27055c7faea
