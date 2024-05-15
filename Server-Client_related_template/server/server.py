@@ -1,45 +1,33 @@
-import socket
+# <참고 사이트>
+# https://foxtrotin.tistory.com/278
+# https://techexpert.tips/python/python-file-transfer-using-sockets/
 
 
-SIZE = 1024
-FORMAT = "utf-8"
+from socket import *
+from os.path import exists
+import sys
 
 
-def get_filename(host, port):
-    BUFFER_SIZE = 4096  # Buffer size for receiving
+PORT = 8888
+BUFFER_SIZE = 1024
+STORAGE_FOLDER = './uploads/'
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((host, port))
-        s.listen()
-        print(f'Waiting for connection at {host}:{port}')
-        conn, addr = s.accept()
+serverSock = socket(AF_INET, SOCK_STREAM)
+serverSock.bind(('', PORT))
+serverSock.listen(1)
 
-        with conn:
-            filename = conn.recv(SIZE).decode(FORMAT)
-            print(f"received filename: {filename}")
-            return filename
+connectionSock, addr = serverSock.accept()
+print(str(addr),'에서 접속했습니다')
 
+file_name = connectionSock.recv(BUFFER_SIZE) #클라이언트한테 파일이름(이진 바이트 스트림 형태)을 전달 받는다
+file_name = file_name.decode('utf-8')
+print('받을 파일 이름 : ', file_name) #파일 이름을 일반 문자열로 변환한다
 
-def receive_file(file_name, host, port):
-    BUFFER_SIZE = 4096  # Buffer size for receiving
+with open(STORAGE_FOLDER + file_name, 'wb') as f:
+    while True:
+        data = connectionSock.recv(BUFFER_SIZE)
+        if not data:
+            break
+        f.write(data)
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((host, port))
-        s.listen()
-        print(f'Waiting for connection at {host}:{port}')
-        conn, addr = s.accept()
-        with conn:
-            print(f'Connected by {addr}')
-            with open(file_name, 'wb') as f:
-                while True:
-                    data = conn.recv(BUFFER_SIZE)
-                    if not data:
-                        break
-                    f.write(data)
-            print('File received successfully!')
-
-# Using the function to receive the file
-saved_file_name = 'received_file-1.exe'  # Name of the file to be saved
-HOST = '127.0.0.1'  
-PORT = 65432
-receive_file(saved_file_name, HOST, PORT)
+    print('Received')

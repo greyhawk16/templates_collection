@@ -1,38 +1,36 @@
-# https://nikhilroxtomar.medium.com/file-transfer-using-tcp-socket-in-python3-idiot-developer-c5cf3899819c
-# https://www.geeksforgeeks.org/file-transfer-using-tcp-socket-in-python/
-# https://techexpert.tips/ko/python-ko/python-%EC%86%8C%EC%BC%93%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%9C-%ED%8C%8C%EC%9D%BC-%EC%A0%84%EC%86%A1/
-
-import socket
+# <참고 사이트>
+# https://foxtrotin.tistory.com/278
+# https://techexpert.tips/python/python-file-transfer-using-sockets/
 
 
-FORMAT = "utf-8"
-SIZE = 1024
+from socket import *
+import os
+import sys
 
 
-def send_filename(filename, host, port):
-    BUFFER_SIZE = 4096  # Buffer size for sending
+PORT = 8888
+BUFFER_SIZE = 1024
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((host, port))
-        s.send(filename.encode(FORMAT))
-        print(f"file sent: {filename}")
-         
+clientSock = socket(AF_INET, SOCK_STREAM)
+clientSock.connect(('127.0.0.1', PORT))
 
-def send_file(filename, host, port):
-    BUFFER_SIZE = 4096  # Buffer size for sending
+print('연결에 성공했습니다.')
+filename = input('전송할 파일 이름을 입력하세요: ')
+clientSock.sendall(filename.encode('utf-8'))
+data_transferred = 0
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((host, port))
-        with open(filename, 'rb') as f:
-            while True:
-                data = f.read(BUFFER_SIZE)
-                if not data:
-                    break
-                s.sendall(data)
-        print('File sent successfully!')
+print("파일 %s 전송 시작" %filename)
 
-# Using the function to send the file
-filename = 'xfoil.exe'  # Name of the file to be sent
-HOST = '127.0.0.1'  
-PORT = 65432
-send_file(filename, HOST, PORT)
+with open(filename, 'rb') as f:
+    try:
+        # 1안
+        while True:
+            data = f.read(BUFFER_SIZE)
+            if not data:
+                break
+            clientSock.sendall(data)
+        print("전송완료 %s, 전송량 %d" %(filename, data_transferred))
+
+    except Exception as ex:
+        print(ex)
+
